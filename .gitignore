@@ -1,0 +1,12 @@
+node_modules/
+.env
+.DS_Store
+*.log
+build/
+dist/
+.vscode/
+.idea/
+
+# Implementation guides (keep these local, not in git)
+IMPLEMENTATION_GUIDE.md
+GIT_CHECKPOINTS.md
