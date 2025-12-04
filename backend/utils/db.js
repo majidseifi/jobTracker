@@ -1,9 +1,9 @@
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
-const DB_DIR = path.join(__dirname, '../db');
-const APPLICATIONS_FILE = path.join(DB_DIR, 'applications.json');
-const SETTINGS_FILE = path.join(DB_DIR, 'settings.json');
+const DB_DIR = path.join(__dirname, "../db");
+const APPLICATIONS_FILE = path.join(DB_DIR, "applications.json");
+const SETTINGS_FILE = path.join(DB_DIR, "settings.json");
 
 // Ensure database directory exists
 async function ensureDbDir() {
@@ -18,12 +18,12 @@ async function ensureDbDir() {
 async function readDB(filename) {
   try {
     await ensureDbDir();
-    const data = await fs.readFile(filename, 'utf-8');
+    const data = await fs.readFile(filename, "utf-8");
     return JSON.parse(data);
   } catch (error) {
-    if (error.code === 'ENOENT') {
+    if (error.code === "ENOENT") {
       // File doesn't exist, return empty array/object
-      return filename.includes('applications') ? [] : {};
+      return filename.includes("applications") ? [] : {};
     }
     throw error;
   }
@@ -33,9 +33,9 @@ async function readDB(filename) {
 async function writeDB(filename, data) {
   try {
     await ensureDbDir();
-    await fs.writeFile(filename, JSON.stringify(data, null, 2), 'utf-8');
+    await fs.writeFile(filename, JSON.stringify(data, null, 2), "utf-8");
   } catch (error) {
-    console.error('Error writing to database:', error);
+    console.error("Error writing to database:", error);
     throw error;
   }
 }
@@ -47,7 +47,7 @@ async function getAllApplications() {
 
 async function getApplicationById(id) {
   const applications = await getAllApplications();
-  return applications.find(app => app.id === id);
+  return applications.find((app) => app.id === id);
 }
 
 async function saveApplications(applications) {
@@ -61,7 +61,7 @@ async function createApplication(applicationData) {
     ...applicationData,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    interviews: applicationData.interviews || []
+    interviews: applicationData.interviews || [],
   };
   applications.push(newApp);
   await saveApplications(applications);
@@ -70,7 +70,7 @@ async function createApplication(applicationData) {
 
 async function updateApplication(id, updates) {
   const applications = await getAllApplications();
-  const index = applications.findIndex(app => app.id === id);
+  const index = applications.findIndex((app) => app.id === id);
 
   if (index === -1) {
     return null;
@@ -81,7 +81,7 @@ async function updateApplication(id, updates) {
     ...updates,
     id: applications[index].id, // Preserve original ID
     createdAt: applications[index].createdAt, // Preserve creation date
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
 
   await saveApplications(applications);
@@ -90,7 +90,7 @@ async function updateApplication(id, updates) {
 
 async function deleteApplication(id) {
   const applications = await getAllApplications();
-  const filteredApps = applications.filter(app => app.id !== id);
+  const filteredApps = applications.filter((app) => app.id !== id);
 
   if (filteredApps.length === applications.length) {
     return false; // No application was deleted
@@ -119,5 +119,5 @@ module.exports = {
   updateApplication,
   deleteApplication,
   getSettings,
-  updateSettings
+  updateSettings,
 };

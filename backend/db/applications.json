@@ -1,34 +1,5 @@
 [
   {
-    "id": "1732800000000",
-    "title": "Fullstack JavaScript Engineer (MarTech)",
-    "platform": "Company Website",
-    "link": "https://lumenalta.com/careers/fullstack-engineer",
-    "date": "2025-11-20",
-    "rating": 85,
-    "resumeVersion": "v2.1",
-    "companyName": "Lumenalta",
-    "jobDescription": "Full stack JavaScript engineer role focusing on MarTech solutions",
-    "coverLetter": "",
-    "salary": "80000-120000 CAD",
-    "city": "Toronto, ON",
-    "expired": false,
-    "remote": true,
-    "status": "interviewing",
-    "appliedDate": "2025-11-20",
-    "notes": "Referral from John. Need to prepare JavaScript deep dive questions.",
-    "interviews": [
-      {
-        "date": "2025-11-28T14:00:00Z",
-        "type": "Technical Screen",
-        "notes": "45 min call with senior engineer",
-        "feedback": "Went well, discussed React and Node.js experience"
-      }
-    ],
-    "createdAt": "2025-11-20T10:30:00Z",
-    "updatedAt": "2025-11-28T15:00:00Z"
-  },
-  {
     "id": "1732810000000",
     "title": "Senior Frontend Developer",
     "platform": "Company Website",
@@ -78,5 +49,23 @@
     ],
     "createdAt": "2025-11-15T14:20:00Z",
     "updatedAt": "2025-11-22T16:30:00Z"
+  },
+  {
+    "id": "1764819787673",
+    "companyName": "Google",
+    "title": "Software Engineer",
+    "platform": "LinkedIn",
+    "link": "https://linkedin.com/jobs/123",
+    "city": "Toronto, ON",
+    "remote": true,
+    "salary": "120000-150000 CAD",
+    "status": "applied",
+    "appliedDate": "2025-11-29",
+    "rating": 85,
+    "resumeVersion": "v2.1",
+    "notes": "Applied through referral",
+    "createdAt": "2025-12-04T03:43:07.673Z",
+    "updatedAt": "2025-12-04T03:43:07.673Z",
+    "interviews": []
   }
 ]
