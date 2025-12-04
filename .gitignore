@@ -10,3 +10,4 @@ dist/
 # Implementation guides (keep these local, not in git)
 IMPLEMENTATION_GUIDE.md
 GIT_CHECKPOINTS.md
+backend/credentials/
