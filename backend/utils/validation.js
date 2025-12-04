@@ -1,13 +1,27 @@
 // Validation utilities for application data
 
-const VALID_STATUSES = [
-  "applied",
-  "interviewing",
-  "offer",
-  "rejected",
-  "accepted",
-  "withdrawn",
+const VALID_PLATFORMS = [
+  "Indeed",
+  "LinkedIn",
+  "ZipRecruiter",
+  "Google",
+  "Upwork",
+  "Freelancer.com",
+  "SimplyHired",
+  "WellFound",
+  "Company",
 ];
+
+const VALID_STATUSES = [
+  "Rejected",
+  "To-Do",
+  "Applied",
+  "Not Relevant",
+  "Interviewed",
+];
+
+const VALID_RESUME_VERSIONS = ["1", "2", "3", "4"];
+
 const VALID_INTERVIEW_TYPES = [
   "Phone Screen",
   "Technical Screen",
@@ -37,6 +51,11 @@ function validateUrl(url) {
 
 function validateDate(dateString) {
   if (!dateString) return false;
+  // Check for YYYY-MM-DD format
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(dateString)) return false;
+
+  // Verify it's a valid date
   const date = new Date(dateString);
   return date instanceof Date && !isNaN(date);
 }
@@ -68,9 +87,13 @@ function validateApplication(data, isUpdate = false) {
   }
 
   // Validate platform
-  if (data.platform !== undefined && data.platform !== null) {
-    if (typeof data.platform !== "string" || data.platform.length > 100) {
-      errors.push("Platform must be a string with max 100 characters");
+  if (
+    data.platform !== undefined &&
+    data.platform !== null &&
+    data.platform !== ""
+  ) {
+    if (!VALID_PLATFORMS.includes(data.platform)) {
+      errors.push(`Platform must be one of: ${VALID_PLATFORMS.join(", ")}`);
     }
   }
 
@@ -81,31 +104,32 @@ function validateApplication(data, isUpdate = false) {
     }
   }
 
-  // Validate date
+  // Validate date (job posting date)
   if (data.date !== undefined && data.date !== null && data.date !== "") {
     if (!validateDate(data.date)) {
-      errors.push("Date must be a valid ISO date string");
+      errors.push("Date must be in YYYY-MM-DD format (e.g., 2025-12-02)");
     }
   }
 
   // Validate rating
   if (data.rating !== undefined && data.rating !== null) {
-    if (
-      typeof data.rating !== "number" ||
-      data.rating < 0 ||
-      data.rating > 100
-    ) {
-      errors.push("Rating must be a number between 0 and 100");
+    const ratingNum = Number(data.rating);
+    if (isNaN(ratingNum) || ratingNum < 0 || ratingNum > 10) {
+      errors.push("Rating must be a number between 0 and 10");
     }
   }
 
   // Validate resumeVersion
-  if (data.resumeVersion !== undefined && data.resumeVersion !== null) {
-    if (
-      typeof data.resumeVersion !== "string" ||
-      data.resumeVersion.length > 50
-    ) {
-      errors.push("Resume version must be a string with max 50 characters");
+  if (
+    data.resumeVersion !== undefined &&
+    data.resumeVersion !== null &&
+    data.resumeVersion !== ""
+  ) {
+    const versionStr = String(data.resumeVersion);
+    if (!VALID_RESUME_VERSIONS.includes(versionStr)) {
+      errors.push(
+        `Resume version must be one of: ${VALID_RESUME_VERSIONS.join(", ")}`
+      );
     }
   }
 
@@ -174,7 +198,9 @@ function validateApplication(data, isUpdate = false) {
   // Validate appliedDate
   if (data.appliedDate !== undefined) {
     if (!validateDate(data.appliedDate)) {
-      errors.push("Applied date must be a valid ISO date string");
+      errors.push(
+        "Applied date must be in YYYY-MM-DD format (e.g., 2025-12-02)"
+      );
     }
   }
 
@@ -242,5 +268,7 @@ module.exports = {
   validateApplication,
   validateInterview,
   VALID_STATUSES,
+  VALID_PLATFORMS,
+  VALID_RESUME_VERSIONS,
   VALID_INTERVIEW_TYPES,
 };
