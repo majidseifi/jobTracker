@@ -6,10 +6,7 @@ const SPREADSHEET_ID = "your-google-sheet-id-here";
 const SHEET_NAME = "Jobs";
 
 // Path to your service account credentials file
-const CREDENTIALS_PATH = path.join(
-  __dirname,
-  "service-account-credentials.json"
-);
+const CREDENTIALS_PATH = path.join(__dirname, "../credentials/google-sheets-credentials.json");
 
 /**
  * Authenticate and get Google Sheets client
@@ -32,7 +29,7 @@ async function getGoogleSheetsClient() {
     return sheets;
   } catch (error) {
     console.error("Error creating Google Sheets client:", error);
-    throw new error("Failed to authenticate Google Sheets client API");
+    throw new Error("Failed to authenticate Google Sheets client API");
   }
 }
 
