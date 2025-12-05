@@ -4,6 +4,7 @@ const path = require("path");
 
 // Import routes
 const applicationsRouter = require("./routes/applications");
+const statsRouter = require("./routes/stats");
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/api/applications", applicationsRouter);
+app.use("/api/stats", statsRouter);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
