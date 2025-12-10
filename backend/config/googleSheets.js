@@ -2,7 +2,9 @@ const { google } = require("googleapis");
 const path = require("path");
 
 // Your google sheet details
-const SPREADSHEET_ID = "your-google-sheet-id-here";
+// IMPORTANT: Update this with your own Google Sheets ID before running
+// You can also use environment variables: process.env.SPREADSHEET_ID
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID || "your-google-sheet-id-here";
 const SHEET_NAME = "Jobs";
 
 // Path to your service account credentials file
