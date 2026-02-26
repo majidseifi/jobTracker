@@ -10,14 +10,19 @@ router.get("/", async (req, res, next) => {
     // Total jobs in database
     const totalJobs = applications.length;
 
-    // Total applied (status = "Applied")
+    // Total applied (status = "Applied" or "Already Applied")
     const totalApplied = applications.filter(
-      (app) => app.status === "Applied"
+      (app) => app.status === "Applied" || app.status === "Already Applied"
     ).length;
 
     // Remaining to apply (status = "To-Do")
     const remainingToApply = applications.filter(
       (app) => app.status === "To-Do"
+    ).length;
+
+    // Total easy apply
+    const totalEasyApply = applications.filter(
+      (app) => app.easyApply === true
     ).length;
 
     // Count by status
@@ -72,9 +77,9 @@ router.get("/", async (req, res, next) => {
       });
     });
 
-    // Applications by date applied (only for "Applied" status)
+    // Applications by date applied (for "Applied" or "Already Applied" status)
     const appliedApplications = applications.filter(
-      (app) => app.status === "Applied" && app.appliedDate
+      (app) => (app.status === "Applied" || app.status === "Already Applied") && app.appliedDate
     );
 
     const applicationsByDateApplied = {};
@@ -151,6 +156,7 @@ router.get("/", async (req, res, next) => {
         totalJobs,
         totalApplied,
         remainingToApply,
+        totalEasyApply,
         averageAppliedPerDay: parseFloat(averageAppliedPerDay.toFixed(2)),
         jobsToApplyDaily: Math.ceil(jobsToApplyDaily),
         dateRangePublished: {

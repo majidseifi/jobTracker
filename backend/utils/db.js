@@ -13,23 +13,26 @@ const COLUMNS = {
   ID: "A",
   TITLE: "B",
   PLATFORM: "C",
-  LINK: "D",
-  DATE: "E",
-  RATING: "F",
-  RESUME_VERSION: "G",
-  COMPANY_NAME: "H",
-  JOB_DESCRIPTION: "I",
-  COVER_LETTER: "J",
-  SALARY: "K",
-  CITY: "L",
-  EXPIRED: "M",
-  REMOTE: "N",
-  STATUS: "O",
-  APPLIED_DATE: "P",
-  NOTES: "Q",
-  INTERVIEWS: "R",
-  CREATED_AT: "S",
-  UPDATED_AT: "T",
+  POSTING_URL: "D",
+  EASY_APPLY: "E",
+  LINK: "F",
+  DATE: "G",
+  RATING: "H",
+  RESUME_VERSION: "I",
+  COMPANY_NAME: "J",
+  JOB_DESCRIPTION: "K",
+  COVER_LETTER: "L",
+  REACH_OUT_MSG: "M",
+  SALARY: "N",
+  CITY: "O",
+  EXPIRED: "P",
+  REMOTE: "Q",
+  STATUS: "R",
+  APPLIED_DATE: "S",
+  NOTES: "T",
+  INTERVIEWS: "U",
+  CREATED_AT: "V",
+  UPDATED_AT: "W",
 };
 
 // Helper: Convert column letter to index (A=0, B=1, etc.)
@@ -55,8 +58,19 @@ function rowToApplication(row, rowNumber) {
     id: row[columnToIndex(COLUMNS.ID)] || `row_${rowNumber}`,
     title: row[columnToIndex(COLUMNS.TITLE)] || "",
     platform: row[columnToIndex(COLUMNS.PLATFORM)] || "",
+    postingUrl: row[columnToIndex(COLUMNS.POSTING_URL)] || "",
+    easyApply:
+      row[columnToIndex(COLUMNS.EASY_APPLY)] === "TRUE" ||
+      row[columnToIndex(COLUMNS.EASY_APPLY)] === true,
+    link: row[columnToIndex(COLUMNS.LINK)] || "",
     date: row[columnToIndex(COLUMNS.DATE)] || "",
+    rating: parseInt(row[columnToIndex(COLUMNS.RATING)]) || 0,
+    resumeVersion: row[columnToIndex(COLUMNS.RESUME_VERSION)] || "",
     companyName: row[columnToIndex(COLUMNS.COMPANY_NAME)] || "",
+    jobDescription: row[columnToIndex(COLUMNS.JOB_DESCRIPTION)] || "",
+    coverLetter: row[columnToIndex(COLUMNS.COVER_LETTER)] || "",
+    reachOutMessage: row[columnToIndex(COLUMNS.REACH_OUT_MSG)] || "",
+    salary: row[columnToIndex(COLUMNS.SALARY)] || "",
     city: row[columnToIndex(COLUMNS.CITY)] || "",
     expired:
       row[columnToIndex(COLUMNS.EXPIRED)] === "TRUE" ||
@@ -64,101 +78,128 @@ function rowToApplication(row, rowNumber) {
     remote:
       row[columnToIndex(COLUMNS.REMOTE)] === "TRUE" ||
       row[columnToIndex(COLUMNS.REMOTE)] === true,
-    link: row[columnToIndex(COLUMNS.LINK)] || "",
-    rating: parseInt(row[columnToIndex(COLUMNS.RATING)]) || 0,
-    coverLetter: row[columnToIndex(COLUMNS.COVER_LETTER)] || "",
-    salary: row[columnToIndex(COLUMNS.SALARY)] || "",
-    jobDescription: row[columnToIndex(COLUMNS.JOB_DESCRIPTION)] || "",
-    resumeVersion: row[columnToIndex(COLUMNS.RESUME_VERSION)] || "",
-    status: row[columnToIndex(COLUMNS.STATUS)] || "applied",
+    status: row[columnToIndex(COLUMNS.STATUS)] || "To-Do",
     appliedDate: row[columnToIndex(COLUMNS.APPLIED_DATE)] || "",
     notes: row[columnToIndex(COLUMNS.NOTES)] || "",
+    interviews: interviews,
     createdAt:
       row[columnToIndex(COLUMNS.CREATED_AT)] || new Date().toISOString(),
     updatedAt:
       row[columnToIndex(COLUMNS.UPDATED_AT)] || new Date().toISOString(),
-    interviews: interviews,
     _rowNumber: rowNumber, // Store row number for updates
   };
 }
 
 // Helper: Convert application object to row data array
 function applicationToRow(app) {
-  const row = new Array(20).fill(""); // Create array with 20 empty cells
+  const row = new Array(23).fill(""); // Create array with 23 empty cells (A-W)
 
+  row[columnToIndex(COLUMNS.ID)] = app.id || "";
   row[columnToIndex(COLUMNS.TITLE)] = app.title || "";
   row[columnToIndex(COLUMNS.PLATFORM)] = app.platform || "";
+  row[columnToIndex(COLUMNS.POSTING_URL)] = app.postingUrl || "";
+  row[columnToIndex(COLUMNS.EASY_APPLY)] = app.easyApply ? "TRUE" : "FALSE";
+  row[columnToIndex(COLUMNS.LINK)] = app.link || "";
   row[columnToIndex(COLUMNS.DATE)] = app.date || "";
+  row[columnToIndex(COLUMNS.RATING)] = app.rating || 0;
+  row[columnToIndex(COLUMNS.RESUME_VERSION)] = app.resumeVersion || "";
   row[columnToIndex(COLUMNS.COMPANY_NAME)] = app.companyName || "";
+  row[columnToIndex(COLUMNS.JOB_DESCRIPTION)] = app.jobDescription || "";
+  row[columnToIndex(COLUMNS.COVER_LETTER)] = app.coverLetter || "";
+  row[columnToIndex(COLUMNS.REACH_OUT_MSG)] = app.reachOutMessage || "";
+  row[columnToIndex(COLUMNS.SALARY)] = app.salary || "";
   row[columnToIndex(COLUMNS.CITY)] = app.city || "";
   row[columnToIndex(COLUMNS.EXPIRED)] = app.expired ? "TRUE" : "FALSE";
   row[columnToIndex(COLUMNS.REMOTE)] = app.remote ? "TRUE" : "FALSE";
-  row[columnToIndex(COLUMNS.LINK)] = app.link || "";
-  row[columnToIndex(COLUMNS.RATING)] = app.rating || 0;
-  row[columnToIndex(COLUMNS.COVER_LETTER)] = app.coverLetter || "";
-  row[columnToIndex(COLUMNS.SALARY)] = app.salary || "";
-  row[columnToIndex(COLUMNS.JOB_DESCRIPTION)] = app.jobDescription || "";
-  row[columnToIndex(COLUMNS.RESUME_VERSION)] = app.resumeVersion || "";
-  row[columnToIndex(COLUMNS.STATUS)] = app.status || "applied";
+  row[columnToIndex(COLUMNS.STATUS)] = app.status || "To-Do";
   row[columnToIndex(COLUMNS.APPLIED_DATE)] = app.appliedDate || "";
   row[columnToIndex(COLUMNS.NOTES)] = app.notes || "";
-  row[columnToIndex(COLUMNS.ID)] = app.id || "";
+  row[columnToIndex(COLUMNS.INTERVIEWS)] = JSON.stringify(app.interviews || []);
   row[columnToIndex(COLUMNS.CREATED_AT)] =
     app.createdAt || new Date().toISOString();
   row[columnToIndex(COLUMNS.UPDATED_AT)] =
     app.updatedAt || new Date().toISOString();
-  row[columnToIndex(COLUMNS.INTERVIEWS)] = JSON.stringify(app.interviews || []);
 
   return row;
 }
 
+// ============================================
+// IN-MEMORY CACHE
+// ============================================
+let _cache = null;       // Array of application objects (with _rowNumber)
+let _cacheReady = false;
+let _cachePromise = null; // Dedup concurrent warm-ups
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes — auto-refresh from sheet
+let _cacheTime = 0;
+
 /**
- * Get all applications from Google Sheets
+ * Fetch from Google Sheets and populate cache.
+ * Returns the cached array.
  */
-async function getAllApplications() {
-  try {
-    const sheets = await getGoogleSheetsClient();
+async function _fetchAndCache() {
+  const sheets = await getGoogleSheetsClient();
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${SHEET_NAME}!A2:W`,
+  });
+  const rows = response.data.values || [];
+  const applications = rows
+    .map((row, index) => rowToApplication(row, index + 2))
+    .filter((app) => app !== null && app.id);
 
-    // Read all data from sheet (starting from row 2 to skip header)
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A2:T`, // Rows 2 onwards, columns A to T
-    });
+  _cache = applications;
+  _cacheReady = true;
+  _cacheTime = Date.now();
+  _cachePromise = null;
+  console.log(`Cache loaded: ${applications.length} applications`);
+  return _cache;
+}
 
-    const rows = response.data.values || [];
-
-    // Convert each row to application object
-    // rowNumber starts at 2 because row 1 is headers
-    const applications = rows
-      .map((row, index) => rowToApplication(row, index + 2))
-      .filter((app) => app !== null && app.id); // Filter out empty rows
-
-    return applications;
-  } catch (error) {
-    console.error("Error reading from Google Sheets:", error.message);
-    throw new Error("Failed to fetch applications from Google Sheets");
+/**
+ * Ensure cache is populated. Deduplicates concurrent calls.
+ */
+async function _ensureCache() {
+  if (_cacheReady && Date.now() - _cacheTime < CACHE_TTL) {
+    return _cache;
   }
+  if (_cachePromise) return _cachePromise;
+  _cachePromise = _fetchAndCache();
+  return _cachePromise;
 }
 
 /**
- * Get single application by ID
+ * Force-refresh cache from sheet (call after external changes like n8n webhook).
  */
+async function refreshCache() {
+  _cacheReady = false;
+  return _ensureCache();
+}
+
+/** Helper: strip _rowNumber for API responses */
+function _stripInternal(app) {
+  const { _rowNumber, ...rest } = app;
+  return rest;
+}
+
+// ============================================
+// PUBLIC API (all reads come from cache)
+// ============================================
+
+async function getAllApplications() {
+  const apps = await _ensureCache();
+  return apps.map(_stripInternal);
+}
+
 async function getApplicationById(id) {
-  const applications = await getAllApplications();
-  return applications.find((app) => app.id === id);
+  const apps = await _ensureCache();
+  const app = apps.find((a) => a.id === id);
+  return app ? _stripInternal(app) : null;
 }
 
-/**
- * Create a new application in Google Sheets
- */
 async function createApplication(applicationData) {
   try {
     const sheets = await getGoogleSheetsClient();
-
-    // Generate unique ID
     const id = Date.now().toString();
-
-    // Prepare the application object
     const newApp = {
       ...applicationData,
       id,
@@ -166,19 +207,27 @@ async function createApplication(applicationData) {
       updatedAt: new Date().toISOString(),
       interviews: applicationData.interviews || [],
     };
-
-    // Convert to row format
     const row = applicationToRow(newApp);
 
-    // Append to sheet
-    await sheets.spreadsheets.values.append({
+    const result = await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A:T`,
-      valueInputOption: "RAW",
-      resource: {
-        values: [row],
-      },
+      range: `${SHEET_NAME}!A:W`,
+      valueInputOption: "USER_ENTERED",
+      resource: { values: [row] },
     });
+
+    // Determine the row number that was written
+    const updatedRange = result.data.updates?.updatedRange || "";
+    const match = updatedRange.match(/!A(\d+):/);
+    const rowNumber = match ? parseInt(match[1]) : null;
+
+    // Update cache in-place
+    if (_cacheReady && rowNumber) {
+      _cache.push({ ...newApp, _rowNumber: rowNumber });
+    } else {
+      // Fallback: refresh cache
+      _cacheReady = false;
+    }
 
     return newApp;
   } catch (error) {
@@ -187,79 +236,142 @@ async function createApplication(applicationData) {
   }
 }
 
-/**
- * Update an existing application
- */
 async function updateApplication(id, updates) {
   try {
     const sheets = await getGoogleSheetsClient();
+    const apps = await _ensureCache();
+    const existingApp = apps.find((app) => app.id === id);
+    if (!existingApp) return null;
 
-    // First, find the application to get its row number
-    const applications = await getAllApplications();
-    const existingApp = applications.find((app) => app.id === id);
-
-    if (!existingApp) {
-      return null; // Application not found
-    }
-
-    // Merge updates with existing data
     const updatedApp = {
       ...existingApp,
       ...updates,
-      id: existingApp.id, // Preserve ID
-      createdAt: existingApp.createdAt, // Preserve creation date
+      id: existingApp.id,
+      createdAt: existingApp.createdAt,
       updatedAt: new Date().toISOString(),
     };
 
-    // Convert to row format
     const row = applicationToRow(updatedApp);
 
-    // Update the specific row
     await sheets.spreadsheets.values.update({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A${existingApp._rowNumber}:T${existingApp._rowNumber}`,
-      valueInputOption: "RAW",
-      resource: {
-        values: [row],
-      },
+      range: `${SHEET_NAME}!A${existingApp._rowNumber}:W${existingApp._rowNumber}`,
+      valueInputOption: "USER_ENTERED",
+      resource: { values: [row] },
     });
 
-    // Remove internal _rowNumber before returning
-    delete updatedApp._rowNumber;
-    return updatedApp;
+    // Update cache in-place
+    if (_cacheReady) {
+      const idx = _cache.findIndex((a) => a.id === id);
+      if (idx !== -1) {
+        _cache[idx] = { ...updatedApp, _rowNumber: existingApp._rowNumber };
+      }
+    }
+
+    return _stripInternal(updatedApp);
   } catch (error) {
     console.error("Error updating application:", error.message);
     throw new Error("Failed to update application in Google Sheets");
   }
 }
 
-/**
- * Delete an application from Google Sheets
- */
 async function deleteApplication(id) {
   try {
     const sheets = await getGoogleSheetsClient();
+    const apps = await _ensureCache();
+    const app = apps.find((a) => a.id === id);
+    if (!app) return false;
 
-    // Find the application to get its row number
-    const applications = await getAllApplications();
-    const app = applications.find((a) => a.id === id);
-
-    if (!app) {
-      return false; // Application not found
-    }
-
-    // Delete the row by clearing its contents
-    // Note: This doesn't actually remove the row, just clears it
-    // To truly delete, you'd need to use batchUpdate with DeleteDimensionRequest
     await sheets.spreadsheets.values.clear({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A${app._rowNumber}:T${app._rowNumber}`,
+      range: `${SHEET_NAME}!A${app._rowNumber}:W${app._rowNumber}`,
     });
+
+    // Update cache in-place
+    if (_cacheReady) {
+      _cache = _cache.filter((a) => a.id !== id);
+    }
 
     return true;
   } catch (error) {
     console.error("Error deleting application:", error.message);
     throw new Error("Failed to delete application from Google Sheets");
+  }
+}
+
+/**
+ * Map from application field name to COLUMNS key + serializer
+ */
+const FIELD_TO_COLUMN = {
+  status: { col: COLUMNS.STATUS, serialize: (v) => v || "" },
+  notes: { col: COLUMNS.NOTES, serialize: (v) => v || "" },
+  interviews: { col: COLUMNS.INTERVIEWS, serialize: (v) => JSON.stringify(v || []) },
+  rating: { col: COLUMNS.RATING, serialize: (v) => v || 0 },
+  remote: { col: COLUMNS.REMOTE, serialize: (v) => v ? "TRUE" : "FALSE" },
+  expired: { col: COLUMNS.EXPIRED, serialize: (v) => v ? "TRUE" : "FALSE" },
+  easyApply: { col: COLUMNS.EASY_APPLY, serialize: (v) => v ? "TRUE" : "FALSE" },
+  appliedDate: { col: COLUMNS.APPLIED_DATE, serialize: (v) => v || "" },
+  salary: { col: COLUMNS.SALARY, serialize: (v) => v || "" },
+  city: { col: COLUMNS.CITY, serialize: (v) => v || "" },
+  title: { col: COLUMNS.TITLE, serialize: (v) => v || "" },
+  companyName: { col: COLUMNS.COMPANY_NAME, serialize: (v) => v || "" },
+  platform: { col: COLUMNS.PLATFORM, serialize: (v) => v || "" },
+  link: { col: COLUMNS.LINK, serialize: (v) => v || "" },
+  postingUrl: { col: COLUMNS.POSTING_URL, serialize: (v) => v || "" },
+  date: { col: COLUMNS.DATE, serialize: (v) => v || "" },
+  resumeVersion: { col: COLUMNS.RESUME_VERSION, serialize: (v) => v || "" },
+  jobDescription: { col: COLUMNS.JOB_DESCRIPTION, serialize: (v) => v || "" },
+  coverLetter: { col: COLUMNS.COVER_LETTER, serialize: (v) => v || "" },
+  reachOutMessage: { col: COLUMNS.REACH_OUT_MSG, serialize: (v) => v || "" },
+};
+
+/**
+ * Update only specific fields (cells) for an application — no full-row rewrite.
+ * Also bumps updatedAt. Uses cache for row lookup (no Sheets read).
+ */
+async function updateFields(id, fields) {
+  try {
+    const sheets = await getGoogleSheetsClient();
+    const apps = await _ensureCache();
+    const existingApp = apps.find((app) => app.id === id);
+    if (!existingApp) return null;
+
+    const rowNum = existingApp._rowNumber;
+    const data = [];
+
+    for (const [key, value] of Object.entries(fields)) {
+      const mapping = FIELD_TO_COLUMN[key];
+      if (!mapping) continue;
+      data.push({
+        range: `${SHEET_NAME}!${mapping.col}${rowNum}`,
+        values: [[mapping.serialize(value)]],
+      });
+    }
+
+    const now = new Date().toISOString();
+    data.push({
+      range: `${SHEET_NAME}!${COLUMNS.UPDATED_AT}${rowNum}`,
+      values: [[now]],
+    });
+
+    await sheets.spreadsheets.values.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      resource: { valueInputOption: "USER_ENTERED", data },
+    });
+
+    // Update cache in-place
+    const updatedApp = { ...existingApp, ...fields, updatedAt: now };
+    if (_cacheReady) {
+      const idx = _cache.findIndex((a) => a.id === id);
+      if (idx !== -1) {
+        _cache[idx] = updatedApp;
+      }
+    }
+
+    return _stripInternal(updatedApp);
+  } catch (error) {
+    console.error("Error updating fields:", error.message);
+    throw new Error("Failed to update fields in Google Sheets");
   }
 }
 
@@ -269,5 +381,7 @@ module.exports = {
   getApplicationById,
   createApplication,
   updateApplication,
+  updateFields,
   deleteApplication,
+  refreshCache,
 };

@@ -7,6 +7,16 @@ const {
   VALID_STATUSES,
 } = require("../utils/validation");
 
+// POST /api/applications/refresh - Force cache refresh from Google Sheets
+router.post("/refresh", async (req, res, next) => {
+  try {
+    await db.refreshCache();
+    res.json({ message: "Cache refreshed" });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get /api/applications - Get all applications
 router.get("/", async (req, res, next) => {
   const { status, companyName, title } = req.query;
@@ -144,7 +154,7 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// Patch /api/applications/:id/status - Update application status
+// Patch /api/applications/:id/status - Update application status (single cell)
 router.patch("/:id/status", async (req, res, next) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -159,7 +169,7 @@ router.patch("/:id/status", async (req, res, next) => {
         },
       });
     }
-    const updatedApplication = await db.updateApplication(id, { status });
+    const updatedApplication = await db.updateFields(id, { status });
     if (!updatedApplication) {
       return res.status(404).json({
         error: {
@@ -172,6 +182,41 @@ router.patch("/:id/status", async (req, res, next) => {
   } catch (error) {
     console.error(
       `Error updating status for application with id ${id}:`,
+      error.message
+    );
+    console.error("Stack trace:", error.stack);
+    next(error);
+  }
+});
+
+// Patch /api/applications/:id/fields - Partial update of specific fields (cells only)
+router.patch("/:id/fields", async (req, res, next) => {
+  const { id } = req.params;
+  const fields = req.body;
+  try {
+    const validation = validateApplication(fields, true);
+    if (!validation.isValid) {
+      return res.status(400).json({
+        error: {
+          message: "Validation failed",
+          details: validation.errors,
+          status: 400,
+        },
+      });
+    }
+    const updatedApplication = await db.updateFields(id, fields);
+    if (!updatedApplication) {
+      return res.status(404).json({
+        error: {
+          message: `Application with id ${id} not found`,
+          status: 404,
+        },
+      });
+    }
+    res.json(updatedApplication);
+  } catch (error) {
+    console.error(
+      `Error updating fields for application with id ${id}:`,
       error.message
     );
     console.error("Stack trace:", error.stack);
@@ -204,7 +249,7 @@ router.post("/:id/interviews", async (req, res, next) => {
       });
     }
     application.interviews.push(interviewData);
-    const updatedApplication = await db.updateApplication(id, application);
+    const updatedApplication = await db.updateFields(id, { interviews: application.interviews });
     res.status(201).json(updatedApplication);
   } catch (error) {
     console.error(

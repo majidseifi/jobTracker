@@ -1,0 +1,37 @@
+.stat-card-item {
+  border-top: 3px solid var(--jt-accent);
+}
+
+.stat-card-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--jt-text-primary);
+  line-height: 1.2;
+}
+
+.stat-card-label {
+  font-size: 0.8rem;
+  color: var(--jt-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.25rem;
+}
+
+.chart-card {
+  height: 100%;
+}
+
+.chart-card .card-header {
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--jt-border);
+  padding: 0.75rem 1rem;
+}
+
+.chart-card .card-body {
+  padding: 1rem;
+}
+
+.recharts-default-legend {
+  color: var(--jt-text-secondary) !important;
+}

@@ -1,0 +1,81 @@
+.jt-table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--jt-border);
+}
+
+.jt-table {
+  margin-bottom: 0;
+}
+
+.jt-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.jt-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.jt-table thead th.sortable:hover {
+  color: var(--jt-accent);
+}
+
+.jt-checkbox-col {
+  width: 40px;
+  padding-left: 12px !important;
+}
+
+.jt-table-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.jt-table-row.selected {
+  background-color: var(--jt-bg-selected) !important;
+}
+
+.jt-company-cell .company-name {
+  font-weight: 600;
+  color: var(--jt-text-primary);
+}
+
+.jt-company-cell .easy-apply-badge {
+  font-size: 0.65rem;
+  vertical-align: middle;
+}
+
+.jt-title-cell {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--jt-text-secondary);
+}
+
+.jt-date-cell {
+  white-space: nowrap;
+  color: var(--jt-text-secondary);
+  font-size: 0.85rem;
+}
+
+.jt-status-select {
+  width: 140px;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.jt-link-btn {
+  color: var(--jt-accent) !important;
+  padding: 0.15rem 0.4rem;
+}
+
+.jt-link-btn:hover {
+  color: var(--jt-accent-hover) !important;
+}
+
+.text-muted {
+  color: var(--jt-text-muted) !important;
+}

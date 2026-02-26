@@ -1,0 +1,130 @@
+.applications-page {
+  max-width: 1400px;
+}
+
+.applications-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.applications-page .page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.refresh-btn {
+  padding: 0.35rem 0.5rem;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.refresh-btn .spin {
+  animation: spin 0.8s linear infinite;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-search {
+  flex: 1;
+  min-width: 240px;
+  max-width: 400px;
+}
+
+.filter-status {
+  width: 160px;
+}
+
+.filter-count {
+  color: var(--jt-text-muted);
+  font-size: 0.85rem;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Pagination */
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.pagination-wrapper .pagination {
+  margin-bottom: 0;
+}
+
+.pagination-wrapper .page-link {
+  background-color: var(--jt-bg-secondary);
+  border-color: var(--jt-border);
+  color: var(--jt-text-secondary);
+  font-size: 0.8rem;
+}
+
+.pagination-wrapper .page-link:hover {
+  background-color: var(--jt-bg-hover);
+  border-color: var(--jt-border-light);
+  color: var(--jt-accent);
+}
+
+.pagination-wrapper .page-item.active .page-link {
+  background-color: var(--jt-accent);
+  border-color: var(--jt-accent);
+  color: #000;
+}
+
+.pagination-wrapper .page-item.disabled .page-link {
+  background-color: var(--jt-bg-secondary);
+  border-color: var(--jt-border);
+  color: var(--jt-text-muted);
+  opacity: 0.5;
+}
+
+.pagination-info {
+  color: var(--jt-text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* All done state */
+.all-done-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background-color: var(--jt-accent-muted);
+  color: var(--jt-accent);
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.all-done-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--jt-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.all-done-sub {
+  color: var(--jt-text-muted);
+  font-size: 0.9rem;
+}

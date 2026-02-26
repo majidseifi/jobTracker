@@ -1,0 +1,13 @@
+.jt-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.jt-main {
+  margin-left: var(--jt-sidebar-width);
+  flex: 1;
+  padding: 1.5rem 2rem;
+  min-height: 100vh;
+  background-color: var(--jt-bg-primary);
+  transition: margin-left 0.3s ease;
+}

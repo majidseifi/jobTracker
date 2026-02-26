@@ -34,8 +34,26 @@ export const updateStatus = (id, status) => {
   return api.patch(`/applications/${id}/status`, { status });
 };
 
+export const patchFields = (id, fields) => {
+  return api.patch(`/applications/${id}/fields`, fields);
+};
+
 export const addInterview = (id, interview) => {
   return api.post(`/applications/${id}/interviews`, interview);
+};
+
+// Bulk Operations
+export const bulkUpdateStatus = (ids, status) => {
+  return Promise.all(ids.map((id) => updateStatus(id, status)));
+};
+
+export const bulkDelete = (ids) => {
+  return Promise.all(ids.map((id) => deleteApplication(id)));
+};
+
+// Cache
+export const refreshCache = () => {
+  return api.post("/applications/refresh");
 };
 
 // Stats

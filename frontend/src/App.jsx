@@ -1,26 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import HomePage from './pages/HomePage';
+import AppLayout from './components/layout/AppLayout';
 import ApplicationsPage from './pages/ApplicationsPage';
-import KanbanPage from './pages/KanbanPage';
 import AnalyticsPage from './pages/AnalyticsPage';
+import SettingsPage from './pages/SettingsPage';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Navbar />
-        <main className="container">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/applications" element={<ApplicationsPage />} />
-            <Route path="/kanban" element={<KanbanPage />} />
-            <Route path="/analytics" element={<AnalyticsPage />} />
-          </Routes>
-        </main>
-      </div>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<ApplicationsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }

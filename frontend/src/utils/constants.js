@@ -1,9 +1,10 @@
 export const STATUS_OPTIONS = [
-  { value: "To-Do", label: "To-Do", color: "#F59E0B" },
-  { value: "Applied", label: "Applied", color: "#3B82F6" },
-  { value: "Interviewed", label: "Interviewed", color: "#8B5CF6" },
-  { value: "Rejected", label: "Rejected", color: "#EF4444" },
-  { value: "Not Relevant", label: "Not Relevant", color: "#6B7280" },
+  { value: "To-Do", label: "To-Do", color: "#F59E0B", cssColor: "warning" },
+  { value: "Applied", label: "Applied", color: "#3B82F6", cssColor: "primary" },
+  { value: "Already Applied", label: "Already Applied", color: "#06B6D4", cssColor: "info" },
+  { value: "Interviewed", label: "Interviewed", color: "#8B5CF6", cssColor: "info" },
+  { value: "Rejected", label: "Rejected", color: "#EF4444", cssColor: "danger" },
+  { value: "Not Relevant", label: "Not Relevant", color: "#6B7280", cssColor: "secondary" },
 ];
 
 export const INTERVIEW_TYPES = [

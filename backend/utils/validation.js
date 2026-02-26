@@ -16,6 +16,7 @@ const VALID_STATUSES = [
   "Rejected",
   "To-Do",
   "Applied",
+  "Already Applied",
   "Not Relevant",
   "Interviewed",
 ];
@@ -208,6 +209,27 @@ function validateApplication(data, isUpdate = false) {
   if (data.notes !== undefined && data.notes !== null) {
     if (typeof data.notes !== "string" || data.notes.length > 5000) {
       errors.push("Notes must be a string with max 5000 characters");
+    }
+  }
+
+  // Validate easyApply
+  if (data.easyApply !== undefined && data.easyApply !== null) {
+    if (typeof data.easyApply !== "boolean") {
+      errors.push("EasyApply must be a boolean");
+    }
+  }
+
+  // Validate postingUrl
+  if (data.postingUrl !== undefined && data.postingUrl !== null && data.postingUrl !== "") {
+    if (!validateUrl(data.postingUrl)) {
+      errors.push("Posting URL must be a valid URL");
+    }
+  }
+
+  // Validate reachOutMessage
+  if (data.reachOutMessage !== undefined && data.reachOutMessage !== null) {
+    if (typeof data.reachOutMessage !== "string" || data.reachOutMessage.length > 10000) {
+      errors.push("Reach out message must be a string with max 10000 characters");
     }
   }
 
