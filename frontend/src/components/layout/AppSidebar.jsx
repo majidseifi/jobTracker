@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import CIcon from '@coreui/icons-react';
-import { cilBriefcase, cilChartLine, cilSettings } from '@coreui/icons';
+import { cilBriefcase, cilChartLine, cilSettings, cilAccountLogout } from '@coreui/icons';
+import { logout } from '../../utils/api';
 import './AppSidebar.css';
 
 const navItems = [
@@ -32,6 +33,12 @@ function AppSidebar() {
           </NavLink>
         ))}
       </nav>
+      <div className="jt-sidebar-footer">
+        <button className="jt-nav-link jt-logout-btn" onClick={logout}>
+          <CIcon icon={cilAccountLogout} size="lg" className="jt-nav-icon" />
+          <span className="jt-nav-label">Logout</span>
+        </button>
+      </div>
     </aside>
   );
 }

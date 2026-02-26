@@ -8,6 +8,45 @@ const api = axios.create({
   },
 });
 
+// Attach token to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// On 401, clear token and redirect to login
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Auth
+export const login = async (password) => {
+  const res = await api.post("/auth/login", { password });
+  localStorage.setItem("token", res.data.token);
+  return res;
+};
+
+export const logout = () => {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+};
+
+export const isAuthenticated = () => {
+  return !!localStorage.getItem("token");
+};
+
 // Applications
 export const getAllApplications = (filters = {}) => {
   const params = new URLSearchParams(filters);

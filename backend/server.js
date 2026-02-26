@@ -7,6 +7,8 @@ const path = require("path");
 const applicationsRouter = require("./routes/applications");
 const statsRouter = require("./routes/stats");
 const configRouter = require("./routes/config");
+const authRouter = require("./routes/auth");
+const authMiddleware = require("./middleware/auth");
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -22,15 +24,21 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint (before auth middleware)
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
+});
+
+// Auth routes (login/verify don't require auth)
+app.use("/api/auth", authRouter);
+
+// Auth middleware for all other /api routes
+app.use("/api", authMiddleware);
+
 // Routes
 app.use("/api/applications", applicationsRouter);
 app.use("/api/stats", statsRouter);
 app.use("/api/config", configRouter);
-
-// Health check endpoint
-app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", timestamp: new Date().toISOString() });
-});
 
 // Serve frontend static build in production
 const frontendBuild = path.join(__dirname, "public");

@@ -1,0 +1,89 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--jt-bg-primary);
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background-color: var(--jt-bg-card);
+  border: 1px solid var(--jt-border);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+}
+
+.login-brand {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-brand h1 {
+  color: var(--jt-accent);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.login-brand p {
+  color: var(--jt-text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background-color: var(--jt-bg-secondary);
+  border: 1px solid var(--jt-border);
+  border-radius: 8px;
+  color: var(--jt-text-primary);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.login-input:focus {
+  border-color: var(--jt-accent);
+  box-shadow: 0 0 0 3px var(--jt-accent-muted);
+}
+
+.login-input::placeholder {
+  color: var(--jt-text-muted);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: var(--jt-accent);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.login-btn:hover:not(:disabled) {
+  background-color: var(--jt-accent-hover);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-error {
+  color: var(--jt-danger);
+  font-size: 0.85rem;
+  text-align: center;
+}

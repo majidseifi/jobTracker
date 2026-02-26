@@ -28,7 +28,7 @@ steps:
     - '--port'
     - '8080'
     - '--set-secrets'
-    - 'GOOGLE_CREDENTIALS=jobtracker-google-credentials:latest,SPREADSHEET_ID=jobtracker-spreadsheet-id:latest'
+    - 'GOOGLE_CREDENTIALS=jobtracker-google-credentials:latest,SPREADSHEET_ID=jobtracker-spreadsheet-id:latest,ADMIN_PASSWORD=jobtracker-admin-password:latest'
 
 images:
   - 'gcr.io/$PROJECT_ID/job-tracker:$SHORT_SHA'
