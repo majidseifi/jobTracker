@@ -61,4 +61,13 @@ export const getStats = () => {
   return api.get("/stats");
 };
 
+// Config
+export const getConfig = () => {
+  return api.get("/config");
+};
+
+export const updateSpreadsheetId = (spreadsheetId) => {
+  return api.put("/config/spreadsheet-id", { spreadsheetId });
+};
+
 export default api;

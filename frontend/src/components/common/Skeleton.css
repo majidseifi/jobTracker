@@ -1,0 +1,74 @@
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.skeleton-bar {
+  background-color: var(--jt-bg-tertiary);
+  border-radius: 4px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* Table skeleton */
+.skeleton-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--jt-border);
+}
+
+.skeleton-row .skeleton-bar {
+  height: 14px;
+}
+
+.skeleton-row .skeleton-bar:nth-child(1) { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+.skeleton-row .skeleton-bar:nth-child(2) { width: 18%; }
+.skeleton-row .skeleton-bar:nth-child(3) { width: 22%; }
+.skeleton-row .skeleton-bar:nth-child(4) { width: 12%; }
+.skeleton-row .skeleton-bar:nth-child(5) { width: 10%; }
+.skeleton-row .skeleton-bar:nth-child(6) { width: 8%; }
+.skeleton-row .skeleton-bar:nth-child(7) { width: 14%; }
+
+/* Card skeleton */
+.skeleton-card {
+  background-color: var(--jt-bg-card);
+  border: 1px solid var(--jt-border);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+}
+
+.skeleton-card .skeleton-bar.title {
+  height: 14px;
+  width: 40%;
+  margin-bottom: 1rem;
+}
+
+.skeleton-card .skeleton-bar.chart {
+  height: 180px;
+  width: 100%;
+}
+
+/* Stat card skeleton */
+.skeleton-stat-card {
+  background-color: var(--jt-bg-card);
+  border: 1px solid var(--jt-border);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+}
+
+.skeleton-stat-card .skeleton-bar.label {
+  height: 12px;
+  width: 60%;
+  margin-bottom: 0.75rem;
+}
+
+.skeleton-stat-card .skeleton-bar.value {
+  height: 28px;
+  width: 40%;
+}

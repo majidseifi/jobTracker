@@ -55,7 +55,7 @@ function rowToApplication(row, rowNumber) {
   }
 
   return {
-    id: row[columnToIndex(COLUMNS.ID)] || `row_${rowNumber}`,
+    id: String(row[columnToIndex(COLUMNS.ID)] || "") || `row_${rowNumber}`,
     title: row[columnToIndex(COLUMNS.TITLE)] || "",
     platform: row[columnToIndex(COLUMNS.PLATFORM)] || "",
     postingUrl: row[columnToIndex(COLUMNS.POSTING_URL)] || "",
@@ -91,17 +91,19 @@ function rowToApplication(row, rowNumber) {
 }
 
 // Helper: Convert application object to row data array
+// Uses native JS types (boolean, number) so Google Sheets stores them properly
+// (preserves checkboxes, number formats, date formats with USER_ENTERED)
 function applicationToRow(app) {
   const row = new Array(23).fill(""); // Create array with 23 empty cells (A-W)
 
-  row[columnToIndex(COLUMNS.ID)] = app.id || "";
+  row[columnToIndex(COLUMNS.ID)] = app.id ? Number(app.id) : "";
   row[columnToIndex(COLUMNS.TITLE)] = app.title || "";
   row[columnToIndex(COLUMNS.PLATFORM)] = app.platform || "";
   row[columnToIndex(COLUMNS.POSTING_URL)] = app.postingUrl || "";
-  row[columnToIndex(COLUMNS.EASY_APPLY)] = app.easyApply ? "TRUE" : "FALSE";
+  row[columnToIndex(COLUMNS.EASY_APPLY)] = !!app.easyApply;
   row[columnToIndex(COLUMNS.LINK)] = app.link || "";
   row[columnToIndex(COLUMNS.DATE)] = app.date || "";
-  row[columnToIndex(COLUMNS.RATING)] = app.rating || 0;
+  row[columnToIndex(COLUMNS.RATING)] = Number(app.rating) || 0;
   row[columnToIndex(COLUMNS.RESUME_VERSION)] = app.resumeVersion || "";
   row[columnToIndex(COLUMNS.COMPANY_NAME)] = app.companyName || "";
   row[columnToIndex(COLUMNS.JOB_DESCRIPTION)] = app.jobDescription || "";
@@ -109,8 +111,8 @@ function applicationToRow(app) {
   row[columnToIndex(COLUMNS.REACH_OUT_MSG)] = app.reachOutMessage || "";
   row[columnToIndex(COLUMNS.SALARY)] = app.salary || "";
   row[columnToIndex(COLUMNS.CITY)] = app.city || "";
-  row[columnToIndex(COLUMNS.EXPIRED)] = app.expired ? "TRUE" : "FALSE";
-  row[columnToIndex(COLUMNS.REMOTE)] = app.remote ? "TRUE" : "FALSE";
+  row[columnToIndex(COLUMNS.EXPIRED)] = !!app.expired;
+  row[columnToIndex(COLUMNS.REMOTE)] = !!app.remote;
   row[columnToIndex(COLUMNS.STATUS)] = app.status || "To-Do";
   row[columnToIndex(COLUMNS.APPLIED_DATE)] = app.appliedDate || "";
   row[columnToIndex(COLUMNS.NOTES)] = app.notes || "";
@@ -306,10 +308,10 @@ const FIELD_TO_COLUMN = {
   status: { col: COLUMNS.STATUS, serialize: (v) => v || "" },
   notes: { col: COLUMNS.NOTES, serialize: (v) => v || "" },
   interviews: { col: COLUMNS.INTERVIEWS, serialize: (v) => JSON.stringify(v || []) },
-  rating: { col: COLUMNS.RATING, serialize: (v) => v || 0 },
-  remote: { col: COLUMNS.REMOTE, serialize: (v) => v ? "TRUE" : "FALSE" },
-  expired: { col: COLUMNS.EXPIRED, serialize: (v) => v ? "TRUE" : "FALSE" },
-  easyApply: { col: COLUMNS.EASY_APPLY, serialize: (v) => v ? "TRUE" : "FALSE" },
+  rating: { col: COLUMNS.RATING, serialize: (v) => Number(v) || 0 },
+  remote: { col: COLUMNS.REMOTE, serialize: (v) => !!v },
+  expired: { col: COLUMNS.EXPIRED, serialize: (v) => !!v },
+  easyApply: { col: COLUMNS.EASY_APPLY, serialize: (v) => !!v },
   appliedDate: { col: COLUMNS.APPLIED_DATE, serialize: (v) => v || "" },
   salary: { col: COLUMNS.SALARY, serialize: (v) => v || "" },
   city: { col: COLUMNS.CITY, serialize: (v) => v || "" },

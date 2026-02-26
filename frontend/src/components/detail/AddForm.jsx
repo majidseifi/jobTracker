@@ -10,6 +10,7 @@ import {
 } from '@coreui/react';
 import { createApplication } from '../../utils/api';
 import { STATUS_OPTIONS } from '../../utils/constants';
+import { useToast } from '../../context/ToastContext';
 
 const PLATFORMS = [
   'Indeed', 'LinkedIn', 'ZipRecruiter', 'Google', 'Upwork',
@@ -17,6 +18,7 @@ const PLATFORMS = [
 ];
 
 function AddForm({ onSaved, onCancel }) {
+  const { addToast } = useToast();
   const today = new Date().toISOString().split('T')[0];
   const [formData, setFormData] = useState({
     companyName: '',
@@ -59,9 +61,12 @@ function AddForm({ onSaved, onCancel }) {
         rating: formData.rating ? Number(formData.rating) : 0,
       };
       await createApplication(payload);
+      addToast('Application created', 'success');
       onSaved();
     } catch (err) {
-      setError(err.response?.data?.error?.message || 'Failed to create application');
+      const msg = err.response?.data?.error?.message || 'Failed to create application';
+      setError(msg);
+      addToast(msg, 'danger');
     } finally {
       setSaving(false);
     }

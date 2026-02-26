@@ -1,0 +1,16 @@
+.jt-toaster {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10600;
+}
+
+.jt-toast {
+  min-width: 280px;
+  border: 1px solid var(--jt-border-light);
+  font-size: 0.875rem;
+}
+
+.jt-toast .toast-body {
+  color: #fff;
+}

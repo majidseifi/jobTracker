@@ -18,4 +18,4 @@ export const INTERVIEW_TYPES = [
   "HR Round",
 ];
 
-export const API_BASE_URL = "http://localhost:5050/api";
+export const API_BASE_URL = process.env.REACT_APP_API_URL || "/api";

@@ -14,8 +14,10 @@ import { cilExternalLink } from '@coreui/icons';
 import InterviewSection from './InterviewSection';
 import { patchFields } from '../../utils/api';
 import { STATUS_OPTIONS } from '../../utils/constants';
+import { useToast } from '../../context/ToastContext';
 
 function DetailView({ application, onStatusChange, onSaved }) {
+  const { addToast } = useToast();
   const [editingNotes, setEditingNotes] = useState(false);
   const [notes, setNotes] = useState(application.notes || '');
   const [saving, setSaving] = useState(false);
@@ -48,7 +50,7 @@ function DetailView({ application, onStatusChange, onSaved }) {
       setShowAppliedModal(false);
       onSaved();
     } catch (err) {
-      console.error('Failed to mark as applied:', err);
+      addToast('Failed to mark as applied', 'danger');
     } finally {
       setApplyingSaving(false);
     }
@@ -60,7 +62,7 @@ function DetailView({ application, onStatusChange, onSaved }) {
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      addToast('Failed to copy to clipboard', 'danger');
     }
   };
 
@@ -71,7 +73,7 @@ function DetailView({ application, onStatusChange, onSaved }) {
       setEditingNotes(false);
       onSaved();
     } catch (err) {
-      console.error('Failed to save notes:', err);
+      addToast('Failed to save notes', 'danger');
     } finally {
       setSaving(false);
     }

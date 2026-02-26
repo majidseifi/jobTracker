@@ -10,8 +10,10 @@ import {
 } from '@coreui/react';
 import { addInterview } from '../../utils/api';
 import { INTERVIEW_TYPES } from '../../utils/constants';
+import { useToast } from '../../context/ToastContext';
 
 function InterviewSection({ applicationId, interviews, onSaved }) {
+  const { addToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ date: '', type: '', notes: '' });
   const [saving, setSaving] = useState(false);
@@ -23,9 +25,10 @@ function InterviewSection({ applicationId, interviews, onSaved }) {
       await addInterview(applicationId, formData);
       setFormData({ date: '', type: '', notes: '' });
       setShowForm(false);
+      addToast('Interview added', 'success');
       onSaved();
     } catch (err) {
-      console.error('Failed to add interview:', err);
+      addToast('Failed to add interview', 'danger');
     } finally {
       setSaving(false);
     }

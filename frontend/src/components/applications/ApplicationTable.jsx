@@ -37,6 +37,7 @@ function ApplicationTable({
   onStatusChange,
   sortConfig,
   onSort,
+  highlightedIndex = -1,
 }) {
   const allSelected =
     applications.length > 0 && selectedIds.length === applications.length;
@@ -83,13 +84,14 @@ function ApplicationTable({
           </CTableRow>
         </CTableHead>
         <CTableBody>
-          {applications.map((app) => {
+          {applications.map((app, index) => {
             const isSelected = selectedIds.includes(app.id);
+            const isHighlighted = index === highlightedIndex;
 
             return (
               <CTableRow
                 key={app.id}
-                className={`jt-table-row ${isSelected ? 'selected' : ''}`}
+                className={`jt-table-row ${isSelected ? 'selected' : ''} ${isHighlighted ? 'highlighted' : ''}`}
                 onClick={() => onRowClick(app)}
               >
                 <CTableDataCell

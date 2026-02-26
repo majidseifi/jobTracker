@@ -6,6 +6,7 @@ const path = require("path");
 // Import routes
 const applicationsRouter = require("./routes/applications");
 const statsRouter = require("./routes/stats");
+const configRouter = require("./routes/config");
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -24,11 +25,24 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api/applications", applicationsRouter);
 app.use("/api/stats", statsRouter);
+app.use("/api/config", configRouter);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
+
+// Serve frontend static build in production
+const frontendBuild = path.join(__dirname, "public");
+const fs = require("fs");
+if (fs.existsSync(frontendBuild)) {
+  app.use(express.static(frontendBuild));
+  // SPA fallback: serve index.html for non-API routes
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(path.join(frontendBuild, "index.html"));
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {

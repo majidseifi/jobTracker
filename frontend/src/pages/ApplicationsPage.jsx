@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   CButton,
   CFormInput,
@@ -22,21 +22,29 @@ import {
   refreshCache,
 } from '../utils/api';
 import { STATUS_OPTIONS } from '../utils/constants';
+import { useToast } from '../context/ToastContext';
+import useSettings from '../hooks/useSettings';
+import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
+import '../components/common/Skeleton.css';
 import './ApplicationsPage.css';
 
-const PAGE_SIZE = 25;
-
 function ApplicationsPage() {
+  const { settings } = useSettings();
+  const { addToast } = useToast();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('To-Do');
+  const [statusFilter, setStatusFilter] = useState(settings.defaultStatusFilter);
   const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'desc' });
   const [selectedIds, setSelectedIds] = useState([]);
   const [panelMode, setPanelMode] = useState(null);
   const [selectedApp, setSelectedApp] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const searchRef = useRef(null);
+
+  const pageSize = settings.pageSize;
 
   const fetchApplications = useCallback(async () => {
     try {
@@ -44,15 +52,32 @@ function ApplicationsPage() {
       const response = await getAllApplications();
       setApplications(response.data);
     } catch (err) {
-      console.error('Failed to fetch applications:', err);
+      addToast('Failed to fetch applications. Is the backend running?', 'danger');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [addToast]);
 
   useEffect(() => {
     fetchApplications();
   }, [fetchApplications]);
+
+  // Auto-refresh
+  useEffect(() => {
+    if (!settings.autoRefresh) return;
+
+    const interval = setInterval(async () => {
+      if (document.visibilityState !== 'visible') return;
+      try {
+        const response = await getAllApplications();
+        setApplications(response.data);
+      } catch {
+        // Silent fail on background refresh
+      }
+    }, settings.refreshInterval);
+
+    return () => clearInterval(interval);
+  }, [settings.autoRefresh, settings.refreshInterval]);
 
   const handleRefresh = async () => {
     try {
@@ -60,8 +85,9 @@ function ApplicationsPage() {
       await refreshCache();
       const response = await getAllApplications();
       setApplications(response.data);
+      addToast('Data refreshed from Google Sheets', 'success');
     } catch (err) {
-      console.error('Failed to refresh:', err);
+      addToast('Failed to refresh data', 'danger');
     } finally {
       setRefreshing(false);
     }
@@ -110,13 +136,13 @@ function ApplicationsPage() {
     return result;
   }, [applications, searchTerm, statusFilter, sortConfig]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / pageSize));
   const safePage = Math.min(currentPage, totalPages);
 
   const paginatedApps = useMemo(() => {
-    const start = (safePage - 1) * PAGE_SIZE;
-    return filteredAndSorted.slice(start, start + PAGE_SIZE);
-  }, [filteredAndSorted, safePage]);
+    const start = (safePage - 1) * pageSize;
+    return filteredAndSorted.slice(start, start + pageSize);
+  }, [filteredAndSorted, safePage, pageSize]);
 
   const handleSort = (key) => {
     setSortConfig((prev) => ({
@@ -145,7 +171,7 @@ function ApplicationsPage() {
         setSelectedApp((prev) => ({ ...prev, status }));
       }
     } catch (err) {
-      console.error('Failed to update status:', err);
+      addToast('Failed to update status', 'danger');
     }
   };
 
@@ -162,6 +188,7 @@ function ApplicationsPage() {
   const handlePanelClose = () => {
     setPanelMode(null);
     setSelectedApp(null);
+    setHighlightedIndex(-1);
   };
 
   const handleSaved = () => {
@@ -175,8 +202,9 @@ function ApplicationsPage() {
       await bulkUpdateStatus(selectedIds, status);
       setSelectedIds([]);
       fetchApplications();
+      addToast(`${selectedIds.length} application(s) updated to ${status}`, 'success');
     } catch (err) {
-      console.error('Bulk status update failed:', err);
+      addToast('Bulk status update failed', 'danger');
     }
   };
 
@@ -185,12 +213,46 @@ function ApplicationsPage() {
     if (!window.confirm(`Delete ${selectedIds.length} application(s)?`)) return;
     try {
       await bulkDelete(selectedIds);
+      const count = selectedIds.length;
       setSelectedIds([]);
       fetchApplications();
+      addToast(`${count} application(s) deleted`, 'success');
     } catch (err) {
-      console.error('Bulk delete failed:', err);
+      addToast('Bulk delete failed', 'danger');
     }
   };
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts(
+    useMemo(
+      () => ({
+        Escape: () => {
+          if (panelMode) handlePanelClose();
+          else setHighlightedIndex(-1);
+        },
+        n: () => handleAddNew(),
+        r: () => handleRefresh(),
+        '/': () => searchRef.current?.focus(),
+        j: () =>
+          setHighlightedIndex((prev) =>
+            Math.min(prev + 1, paginatedApps.length - 1)
+          ),
+        ArrowDown: () =>
+          setHighlightedIndex((prev) =>
+            Math.min(prev + 1, paginatedApps.length - 1)
+          ),
+        k: () => setHighlightedIndex((prev) => Math.max(prev - 1, 0)),
+        ArrowUp: () => setHighlightedIndex((prev) => Math.max(prev - 1, 0)),
+        Enter: () => {
+          if (highlightedIndex >= 0 && paginatedApps[highlightedIndex]) {
+            handleRowClick(paginatedApps[highlightedIndex]);
+          }
+        },
+      }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [panelMode, paginatedApps, highlightedIndex]
+    )
+  );
 
   const renderPagination = () => {
     if (totalPages <= 1) return null;
@@ -251,18 +313,30 @@ function ApplicationsPage() {
           </CPaginationItem>
         </CPagination>
         <span className="pagination-info">
-          {(safePage - 1) * PAGE_SIZE + 1}
+          {(safePage - 1) * pageSize + 1}
           &ndash;
-          {Math.min(safePage * PAGE_SIZE, filteredAndSorted.length)}
+          {Math.min(safePage * pageSize, filteredAndSorted.length)}
           {' '}of {filteredAndSorted.length}
         </span>
       </div>
     );
   };
 
-  if (loading) {
-    return <div className="loading">Loading applications...</div>;
-  }
+  const renderSkeletonRows = () => (
+    <div className="skeleton-table">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div className="skeleton-row" key={i} style={{ animationDelay: `${i * 0.05}s` }}>
+          <div className="skeleton-bar" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-bar" />
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="applications-page">
@@ -274,7 +348,7 @@ function ApplicationsPage() {
             size="sm"
             onClick={handleRefresh}
             disabled={refreshing}
-            title="Refresh from Google Sheets"
+            title="Refresh from Google Sheets (r)"
             className="refresh-btn"
           >
             <CIcon icon={cilReload} size="sm" className={refreshing ? 'spin' : ''} />
@@ -287,8 +361,9 @@ function ApplicationsPage() {
 
       <div className="filter-bar">
         <CFormInput
+          ref={searchRef}
           type="text"
-          placeholder="Search company, title, city, platform..."
+          placeholder="Search company, title, city, platform... ( / )"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="filter-search"
@@ -333,7 +408,9 @@ function ApplicationsPage() {
         </span>
       </div>
 
-      {filteredAndSorted.length === 0 ? (
+      {loading ? (
+        renderSkeletonRows()
+      ) : filteredAndSorted.length === 0 ? (
         <div className="empty-state">
           {statusFilter === 'To-Do' ? (
             <>
@@ -356,6 +433,7 @@ function ApplicationsPage() {
             onStatusChange={handleStatusChange}
             sortConfig={sortConfig}
             onSort={handleSort}
+            highlightedIndex={highlightedIndex}
           />
           {renderPagination()}
         </>
