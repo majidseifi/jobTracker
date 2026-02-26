@@ -2,7 +2,7 @@
 FROM node:20-alpine AS builder
 
 WORKDIR /app/frontend
-COPY frontend/package*.json ./
+COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 
 COPY frontend/ ./
@@ -15,7 +15,7 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-COPY backend/package*.json ./
+COPY backend/package.json backend/package-lock.json ./
 RUN npm install --omit=dev
 
 COPY backend/ ./
