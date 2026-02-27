@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { STATUS_OPTIONS } from '../../utils/constants';
 
 function StatusChart({ byStatus }) {
+  const [activeIndex, setActiveIndex] = useState(undefined);
+
   const data = Object.entries(byStatus).map(([name, value]) => ({
     name,
     value,
@@ -14,6 +16,7 @@ function StatusChart({ byStatus }) {
   };
 
   return (
+    <div onClickCapture={(e) => e.stopPropagation()}>
     <ResponsiveContainer width="100%" height={280}>
       <PieChart>
         <Pie
@@ -24,6 +27,10 @@ function StatusChart({ byStatus }) {
           outerRadius={100}
           dataKey="value"
           paddingAngle={2}
+          activeIndex={activeIndex}
+          onMouseEnter={(_, index) => setActiveIndex(index)}
+          onMouseLeave={() => setActiveIndex(undefined)}
+          style={{ pointerEvents: 'all', cursor: 'default' }}
         >
           {data.map((entry) => (
             <Cell key={entry.name} fill={getColor(entry.name)} />
@@ -43,6 +50,7 @@ function StatusChart({ byStatus }) {
         />
       </PieChart>
     </ResponsiveContainer>
+    </div>
   );
 }
 

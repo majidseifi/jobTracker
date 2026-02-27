@@ -189,6 +189,38 @@ function SettingsPage() {
           </CCard>
         </CCol>
 
+        {/* Weekly Goals */}
+        <CCol xs={12}>
+          <CCard>
+            <CCardHeader style={{ fontWeight: 600 }}>
+              Weekly Goals
+            </CCardHeader>
+            <CCardBody>
+              <div>
+                <CFormLabel style={{ color: 'var(--jt-text-secondary)', fontSize: '0.85rem' }}>
+                  Weekly application target
+                </CFormLabel>
+                <CFormSelect
+                  value={settings.weeklyTarget}
+                  onChange={(e) => updateSetting('weeklyTarget', Number(e.target.value))}
+                  style={{ maxWidth: 200 }}
+                >
+                  <option value={5}>5 per week</option>
+                  <option value={10}>10 per week</option>
+                  <option value={15}>15 per week</option>
+                  <option value={20}>20 per week</option>
+                  <option value={25}>25 per week</option>
+                  <option value={30}>30 per week</option>
+                  <option value={50}>50 per week</option>
+                </CFormSelect>
+                <small style={{ color: 'var(--jt-text-muted)', marginTop: '0.25rem', display: 'block' }}>
+                  Shown as a goal line on the Weekly Progress chart in Analytics.
+                </small>
+              </div>
+            </CCardBody>
+          </CCard>
+        </CCol>
+
         {/* Keyboard Shortcuts */}
         <CCol xs={12}>
           <CCard>

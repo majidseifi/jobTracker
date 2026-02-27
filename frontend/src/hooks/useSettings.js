@@ -7,6 +7,7 @@ const DEFAULTS = {
   refreshInterval: 120000,
   pageSize: 25,
   defaultStatusFilter: 'To-Do',
+  weeklyTarget: 20,
 };
 
 function loadSettings() {

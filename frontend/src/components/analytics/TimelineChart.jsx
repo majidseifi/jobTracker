@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 function TimelineChart({ data }) {
   return (
+    <div onClickCapture={(e) => e.stopPropagation()}>
     <ResponsiveContainer width="100%" height={280}>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#1e3438" />
@@ -14,12 +15,14 @@ function TimelineChart({ data }) {
         />
         <YAxis stroke="#6b7280" tick={{ fill: '#9ca3af', fontSize: 11 }} />
         <Tooltip
+          trigger="axis"
           contentStyle={{
             backgroundColor: '#0d1b1e',
             border: '1px solid #1e3438',
             borderRadius: '6px',
             color: '#e8e8e8',
           }}
+          cursor={{ stroke: 'rgba(255,255,255,0.15)' }}
         />
         <Line
           type="monotone"
@@ -39,6 +42,7 @@ function TimelineChart({ data }) {
         />
       </LineChart>
     </ResponsiveContainer>
+    </div>
   );
 }
 

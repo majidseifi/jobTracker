@@ -1,5 +1,10 @@
 .stat-card-item {
   border-top: 3px solid var(--jt-accent);
+  transition: transform 0.15s ease;
+}
+
+.stat-card-item:hover {
+  transform: translateY(-2px);
 }
 
 .stat-card-value {
@@ -30,8 +35,28 @@
 
 .chart-card .card-body {
   padding: 1rem;
+  user-select: none;
+}
+
+.chart-card .recharts-wrapper {
+  cursor: default !important;
+}
+
+.chart-card svg {
+  outline: none;
 }
 
 .recharts-default-legend {
   color: var(--jt-text-secondary) !important;
+}
+
+.analytics-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--jt-text-muted);
+  border-bottom: 1px solid var(--jt-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }

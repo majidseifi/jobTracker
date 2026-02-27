@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CRow, CCol, CCard, CCardHeader, CCardBody } from '@coreui/react';
-import { getStats, getAllApplications } from '../utils/api';
+import { getStats } from '../utils/api';
 import { useToast } from '../context/ToastContext';
 import useSettings from '../hooks/useSettings';
 import StatCards from '../components/analytics/StatCards';
@@ -8,6 +8,8 @@ import StatusChart from '../components/analytics/StatusChart';
 import TimelineChart from '../components/analytics/TimelineChart';
 import PlatformChart from '../components/analytics/PlatformChart';
 import WeeklyChart from '../components/analytics/WeeklyChart';
+import FunnelChart from '../components/analytics/FunnelChart';
+import RatingOutcomeChart from '../components/analytics/RatingOutcomeChart';
 import '../components/analytics/AnalyticsCharts.css';
 import '../components/common/Skeleton.css';
 
@@ -15,18 +17,13 @@ function AnalyticsPage() {
   const { addToast } = useToast();
   const { settings } = useSettings();
   const [stats, setStats] = useState(null);
-  const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async (silent = false) => {
     try {
       if (!silent) setLoading(true);
-      const [statsRes, appsRes] = await Promise.all([
-        getStats(),
-        getAllApplications(),
-      ]);
+      const statsRes = await getStats();
       setStats(statsRes.data);
-      setApplications(appsRes.data);
     } catch (err) {
       if (!silent) {
         addToast('Failed to load analytics. Is the backend running?', 'danger');
@@ -60,8 +57,8 @@ function AnalyticsPage() {
         </h1>
 
         <CRow className="g-3 mb-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <CCol sm={6} lg={3} key={i}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <CCol xs={6} sm={4} md={3} key={i}>
               <div className="skeleton-stat-card">
                 <div className="skeleton-bar label" />
                 <div className="skeleton-bar value" />
@@ -92,9 +89,21 @@ function AnalyticsPage() {
         Analytics
       </h1>
 
+      {/* Overview Section */}
+      <div className="analytics-section-title">Overview</div>
       <StatCards stats={stats} />
 
-      <CRow className="g-3">
+      {/* Pipeline Section */}
+      <div className="analytics-section-title">Pipeline</div>
+      <CRow className="g-3 mb-4">
+        <CCol md={6}>
+          <CCard className="chart-card">
+            <CCardHeader>Conversion Funnel</CCardHeader>
+            <CCardBody>
+              <FunnelChart byStatus={stats.byStatus} />
+            </CCardBody>
+          </CCard>
+        </CCol>
         <CCol md={6}>
           <CCard className="chart-card">
             <CCardHeader>Status Breakdown</CCardHeader>
@@ -103,6 +112,11 @@ function AnalyticsPage() {
             </CCardBody>
           </CCard>
         </CCol>
+      </CRow>
+
+      {/* Activity Section */}
+      <div className="analytics-section-title">Activity</div>
+      <CRow className="g-3 mb-4">
         <CCol md={6}>
           <CCard className="chart-card">
             <CCardHeader>Applications Over Time</CCardHeader>
@@ -113,6 +127,22 @@ function AnalyticsPage() {
         </CCol>
         <CCol md={6}>
           <CCard className="chart-card">
+            <CCardHeader>Weekly Progress</CCardHeader>
+            <CCardBody>
+              <WeeklyChart
+                weeklyProgress={stats.weeklyProgress}
+                weeklyTarget={settings.weeklyTarget}
+              />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
+      {/* Insights Section */}
+      <div className="analytics-section-title">Insights</div>
+      <CRow className="g-3 mb-4">
+        <CCol md={6}>
+          <CCard className="chart-card">
             <CCardHeader>Platform Distribution</CCardHeader>
             <CCardBody>
               <PlatformChart byPlatform={stats.byPlatform} />
@@ -121,9 +151,9 @@ function AnalyticsPage() {
         </CCol>
         <CCol md={6}>
           <CCard className="chart-card">
-            <CCardHeader>Last 7 Days</CCardHeader>
+            <CCardHeader>Rating vs Outcome</CCardHeader>
             <CCardBody>
-              <WeeklyChart applications={applications} />
+              <RatingOutcomeChart ratingOutcome={stats.ratingOutcome} />
             </CCardBody>
           </CCard>
         </CCol>

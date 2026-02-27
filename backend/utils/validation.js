@@ -19,6 +19,7 @@ const VALID_STATUSES = [
   "Already Applied",
   "Not Relevant",
   "Interviewed",
+  "Ghosted",
 ];
 
 const VALID_RESUME_VERSIONS = ["1", "2", "3", "4"];

@@ -5,6 +5,7 @@ export const STATUS_OPTIONS = [
   { value: "Interviewed", label: "Interviewed", color: "#8B5CF6", cssColor: "info" },
   { value: "Rejected", label: "Rejected", color: "#EF4444", cssColor: "danger" },
   { value: "Not Relevant", label: "Not Relevant", color: "#6B7280", cssColor: "secondary" },
+  { value: "Ghosted", label: "Ghosted", color: "#7C3AED", cssColor: "secondary" },
 ];
 
 export const INTERVIEW_TYPES = [
