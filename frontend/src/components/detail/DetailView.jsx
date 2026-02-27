@@ -56,6 +56,32 @@ function DetailView({ application, onStatusChange, onSaved }) {
     }
   };
 
+  const handleNotRelevant = async () => {
+    try {
+      setApplyingSaving(true);
+      await patchFields(application.id, { status: 'Not Relevant' });
+      setShowAppliedModal(false);
+      onSaved();
+    } catch (err) {
+      addToast('Failed to update status', 'danger');
+    } finally {
+      setApplyingSaving(false);
+    }
+  };
+
+  const handleCopyCoverLetter = async () => {
+    if (!application.coverLetter) {
+      addToast('No cover letter available', 'warning');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(application.coverLetter);
+      addToast('Cover letter copied to clipboard', 'success');
+    } catch (err) {
+      addToast('Failed to copy to clipboard', 'danger');
+    }
+  };
+
   const handleCopy = async (text, field) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -276,9 +302,15 @@ function DetailView({ application, onStatusChange, onSaved }) {
         <CModalBody style={{ color: 'var(--jt-text-secondary)' }}>
           Mark <strong>{application.companyName}</strong> — {application.title} as Applied?
         </CModalBody>
-        <CModalFooter>
+        <CModalFooter className="d-flex flex-wrap gap-2">
           <CButton color="secondary" variant="outline" size="sm" onClick={() => setShowAppliedModal(false)}>
             Not yet
+          </CButton>
+          <CButton color="info" variant="outline" size="sm" onClick={handleCopyCoverLetter} disabled={applyingSaving}>
+            Copy Cover Letter
+          </CButton>
+          <CButton color="danger" size="sm" onClick={handleNotRelevant} disabled={applyingSaving}>
+            Not Relevant
           </CButton>
           <CButton color="warning" size="sm" onClick={handleConfirmApplied} disabled={applyingSaving}>
             {applyingSaving ? 'Saving...' : 'Yes, I applied'}

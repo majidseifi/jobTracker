@@ -126,6 +126,34 @@ function ApplicationsPage() {
     }
   };
 
+  const handlePostingNotRelevant = async () => {
+    if (!postingApp) return;
+    try {
+      setApplyingSaving(true);
+      await patchFields(postingApp.id, { status: 'Not Relevant' });
+      setShowAppliedModal(false);
+      setPostingApp(null);
+      fetchApplications();
+    } catch (err) {
+      addToast('Failed to update status', 'danger');
+    } finally {
+      setApplyingSaving(false);
+    }
+  };
+
+  const handlePostingCopyCoverLetter = async () => {
+    if (!postingApp?.coverLetter) {
+      addToast('No cover letter available', 'warning');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(postingApp.coverLetter);
+      addToast('Cover letter copied to clipboard', 'success');
+    } catch (err) {
+      addToast('Failed to copy to clipboard', 'danger');
+    }
+  };
+
   const handleRefresh = async () => {
     try {
       setRefreshing(true);
@@ -504,9 +532,15 @@ function ApplicationsPage() {
         <CModalBody style={{ color: 'var(--jt-text-secondary)' }}>
           Mark <strong>{postingApp?.companyName}</strong> — {postingApp?.title} as Applied?
         </CModalBody>
-        <CModalFooter>
+        <CModalFooter className="d-flex flex-wrap gap-2">
           <CButton color="secondary" variant="outline" size="sm" onClick={() => { setShowAppliedModal(false); setPostingApp(null); }}>
             Not yet
+          </CButton>
+          <CButton color="info" variant="outline" size="sm" onClick={handlePostingCopyCoverLetter} disabled={applyingSaving}>
+            Copy Cover Letter
+          </CButton>
+          <CButton color="danger" size="sm" onClick={handlePostingNotRelevant} disabled={applyingSaving}>
+            Not Relevant
           </CButton>
           <CButton color="warning" size="sm" onClick={handleConfirmApplied} disabled={applyingSaving}>
             {applyingSaving ? 'Saving...' : 'Yes, I applied'}
