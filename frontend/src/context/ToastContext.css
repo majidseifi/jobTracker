@@ -1,7 +1,7 @@
 .jt-toaster {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: 1.5rem !important;
+  right: 1.5rem !important;
   z-index: 10600;
 }
 
