@@ -35,6 +35,7 @@ function ApplicationTable({
   onSelectAll,
   onRowClick,
   onStatusChange,
+  onOpenPosting,
   sortConfig,
   onSort,
   highlightedIndex = -1,
@@ -156,10 +157,7 @@ function ApplicationTable({
                       color="link"
                       size="sm"
                       className="jt-link-btn"
-                      href={app.link || app.postingUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      as="a"
+                      onClick={() => onOpenPosting(app)}
                     >
                       <CIcon icon={cilExternalLink} size="sm" />
                     </CButton>

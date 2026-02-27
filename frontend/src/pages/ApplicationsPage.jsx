@@ -9,6 +9,11 @@ import {
   CDropdownItem,
   CPagination,
   CPaginationItem,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
 } from '@coreui/react';
 import ApplicationTable from '../components/applications/ApplicationTable';
 import DetailPanel from '../components/detail/DetailPanel';
@@ -17,6 +22,7 @@ import { cilReload } from '@coreui/icons';
 import {
   getAllApplications,
   updateStatus,
+  patchFields,
   bulkUpdateStatus,
   bulkDelete,
   refreshCache,
@@ -42,6 +48,10 @@ function ApplicationsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [showAppliedModal, setShowAppliedModal] = useState(false);
+  const [postingApp, setPostingApp] = useState(null);
+  const [applyingSaving, setApplyingSaving] = useState(false);
+  const waitingForFocus = useRef(null);
   const searchRef = useRef(null);
 
   const pageSize = settings.pageSize;
@@ -78,6 +88,43 @@ function ApplicationsPage() {
 
     return () => clearInterval(interval);
   }, [settings.autoRefresh, settings.refreshInterval]);
+
+  // Focus listener for "Did you apply?" modal after opening posting URL
+  useEffect(() => {
+    const onFocus = () => {
+      if (waitingForFocus.current) {
+        setPostingApp(waitingForFocus.current);
+        setShowAppliedModal(true);
+        waitingForFocus.current = null;
+      }
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
+
+  const handleOpenPosting = (app) => {
+    const url = app.link || app.postingUrl;
+    if (url) {
+      waitingForFocus.current = app;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleConfirmApplied = async () => {
+    if (!postingApp) return;
+    try {
+      setApplyingSaving(true);
+      const today = new Date().toISOString().split('T')[0];
+      await patchFields(postingApp.id, { status: 'Applied', appliedDate: today });
+      setShowAppliedModal(false);
+      setPostingApp(null);
+      fetchApplications();
+    } catch (err) {
+      addToast('Failed to mark as applied', 'danger');
+    } finally {
+      setApplyingSaving(false);
+    }
+  };
 
   const handleRefresh = async () => {
     try {
@@ -431,6 +478,7 @@ function ApplicationsPage() {
             onSelectAll={handleSelectAll}
             onRowClick={handleRowClick}
             onStatusChange={handleStatusChange}
+            onOpenPosting={handleOpenPosting}
             sortConfig={sortConfig}
             onSort={handleSort}
             highlightedIndex={highlightedIndex}
@@ -447,6 +495,24 @@ function ApplicationsPage() {
         onSaved={handleSaved}
         onStatusChange={handleStatusChange}
       />
+
+      {/* Applied confirmation modal for table posting button */}
+      <CModal visible={showAppliedModal} onClose={() => { setShowAppliedModal(false); setPostingApp(null); }} alignment="center">
+        <CModalHeader>
+          <CModalTitle>Did you apply?</CModalTitle>
+        </CModalHeader>
+        <CModalBody style={{ color: 'var(--jt-text-secondary)' }}>
+          Mark <strong>{postingApp?.companyName}</strong> — {postingApp?.title} as Applied?
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" variant="outline" size="sm" onClick={() => { setShowAppliedModal(false); setPostingApp(null); }}>
+            Not yet
+          </CButton>
+          <CButton color="warning" size="sm" onClick={handleConfirmApplied} disabled={applyingSaving}>
+            {applyingSaving ? 'Saving...' : 'Yes, I applied'}
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </div>
   );
 }
