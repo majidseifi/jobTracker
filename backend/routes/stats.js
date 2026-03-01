@@ -171,11 +171,20 @@ router.get("/", async (req, res, next) => {
         ? ((interviewed + rejected) / totalApplied) * 100
         : 0;
 
-    // Active streak: consecutive days with applications counting backward from today
+    // Active streak: consecutive days with applications counting backward
+    // If today is claimed, count from today; otherwise count from yesterday
     let activeStreak = 0;
+    let streakActive = false;
     if (sortedAppliedDates.length > 0) {
       const appliedDateSet = new Set(sortedAppliedDates);
+      const todayStr = now.toISOString().split("T")[0];
+      streakActive = appliedDateSet.has(todayStr);
+
       const checkDate = new Date(now);
+      if (!streakActive) {
+        // Start counting from yesterday
+        checkDate.setDate(checkDate.getDate() - 1);
+      }
       while (true) {
         const dateStr = checkDate.toISOString().split("T")[0];
         if (appliedDateSet.has(dateStr)) {
@@ -280,6 +289,7 @@ router.get("/", async (req, res, next) => {
         ghostRate: parseFloat(ghostRate.toFixed(1)),
         interviewRate: parseFloat(interviewRate.toFixed(1)),
         activeStreak,
+        streakActive,
         dateRangePublished: {
           min: minPublishedDate,
           max: maxPublishedDate,

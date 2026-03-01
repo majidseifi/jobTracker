@@ -10,14 +10,19 @@ function StatCards({ stats }) {
     { label: 'Avg/Day', value: stats.summary.averageAppliedPerDay, color: '#06B6D4' },
     { label: 'Ghost Rate', value: `${stats.summary.ghostRate}%`, color: '#7C3AED' },
     { label: 'Interview Rate', value: `${stats.summary.interviewRate}%`, color: '#8B5CF6' },
-    { label: 'Active Streak', value: `${stats.summary.activeStreak}d`, color: '#F59E0B' },
+    {
+      label: 'Streak',
+      value: `${stats.summary.activeStreak}d`,
+      color: stats.summary.streakActive ? '#F59E0B' : '#6B7280',
+      inactive: !stats.summary.streakActive && stats.summary.activeStreak > 0,
+    },
   ];
 
   return (
     <CRow className="mb-4 g-3">
       {cards.map((card) => (
         <CCol key={card.label} xs={6} sm={4} md={3}>
-          <CCard className="stat-card-item">
+          <CCard className={`stat-card-item${card.inactive ? ' stat-card-inactive' : ''}`}>
             <CCardBody className="text-center py-3">
               <div className="stat-card-value" style={{ color: card.color }}>
                 {card.value}
