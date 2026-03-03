@@ -1,5 +1,5 @@
 .applications-page {
-  max-width: 1400px;
+  width: 100%;
 }
 
 .applications-page .page-header {
@@ -101,6 +101,55 @@
   color: var(--jt-text-muted);
   font-size: 0.8rem;
   white-space: nowrap;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .applications-page .page-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .filter-search {
+    min-width: 0;
+    max-width: none;
+    flex: 1;
+  }
+
+  .filter-status {
+    width: 130px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .applications-page .page-header {
+    margin-bottom: 1rem;
+  }
+
+  .applications-page .page-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .filter-bar {
+    gap: 0.5rem;
+  }
+
+  .filter-status {
+    width: 110px;
+    font-size: 0.8rem;
+  }
+
+  .filter-count {
+    display: none;
+  }
+
+  .pagination-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
 
 /* All done state */

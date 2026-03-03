@@ -84,3 +84,27 @@
 .text-muted {
   color: var(--jt-text-muted) !important;
 }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .jt-title-cell {
+    max-width: 160px;
+  }
+
+  .jt-status-select {
+    width: 120px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .jt-title-cell {
+    max-width: 120px;
+  }
+
+  .jt-status-select {
+    width: 100px;
+  }
+}

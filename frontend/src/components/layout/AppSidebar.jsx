@@ -11,12 +11,12 @@ const navItems = [
   { name: 'Settings', icon: cilSettings, to: '/settings' },
 ];
 
-function AppSidebar() {
+function AppSidebar({ isOpen, onClose }) {
   return (
-    <aside className="jt-sidebar">
+    <aside className={`jt-sidebar${isOpen ? ' open' : ''}`}>
       <div className="jt-sidebar-brand">
-        <span className="brand-full">JobTracker</span>
-        <span className="brand-narrow">JT</span>
+        <span className="brand-full">Job<span className="brand-accent">Tracker</span></span>
+        <span className="brand-narrow">J<span className="brand-accent">T</span></span>
       </div>
       <nav className="jt-sidebar-nav">
         {navItems.map((item) => (
@@ -27,6 +27,7 @@ function AppSidebar() {
             className={({ isActive }) =>
               `jt-nav-link ${isActive ? 'active' : ''}`
             }
+            onClick={onClose}
           >
             <CIcon icon={item.icon} size="lg" className="jt-nav-icon" />
             <span className="jt-nav-label">{item.name}</span>

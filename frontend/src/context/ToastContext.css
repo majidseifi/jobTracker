@@ -14,3 +14,16 @@
 .jt-toast .toast-body {
   color: #fff;
 }
+
+@media (max-width: 768px) {
+  .jt-toaster {
+    top: 64px !important;
+    right: 1rem !important;
+    left: 1rem !important;
+  }
+
+  .jt-toast {
+    min-width: 0;
+    width: 100%;
+  }
+}

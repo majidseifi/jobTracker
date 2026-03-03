@@ -65,7 +65,7 @@ function SettingsPage() {
   const sheetIdChanged = sheetId.trim() !== savedSheetId;
 
   return (
-    <div style={{ maxWidth: 800 }}>
+    <div style={{ maxWidth: 800, margin: '0 auto' }}>
       <h1 style={{ marginBottom: '1.5rem', fontWeight: 700, fontSize: '1.75rem' }}>
         Settings
       </h1>

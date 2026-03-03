@@ -4,6 +4,23 @@
   background-color: var(--jt-bg-secondary) !important;
 }
 
+@media (max-width: 576px) {
+  .jt-detail-panel {
+    width: 100vw !important;
+    max-width: 100vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .jt-detail-panel .offcanvas-header {
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--jt-border);

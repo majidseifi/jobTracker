@@ -164,6 +164,7 @@ a:hover {
   --cui-offcanvas-bg: var(--jt-bg-secondary);
   --cui-offcanvas-color: var(--jt-text-primary);
   border-left: 1px solid var(--jt-border) !important;
+  z-index: 1050 !important;
 }
 
 .offcanvas-header {

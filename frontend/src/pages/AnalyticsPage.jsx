@@ -51,7 +51,7 @@ function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div style={{ maxWidth: 1400 }}>
+      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <h1 style={{ marginBottom: '1.5rem', fontWeight: 700, fontSize: '1.75rem' }}>
           Analytics
         </h1>
@@ -84,7 +84,7 @@ function AnalyticsPage() {
   if (!stats) return null;
 
   return (
-    <div style={{ maxWidth: 1400 }}>
+    <div style={{ maxWidth: 1400, margin: '0 auto' }}>
       <h1 style={{ marginBottom: '1.5rem', fontWeight: 700, fontSize: '1.75rem' }}>
         Analytics
       </h1>

@@ -31,16 +31,22 @@
 
 .brand-full {
   display: none;
-  color: var(--jt-accent);
-  font-weight: 700;
+  color: var(--jt-text-primary);
+  font-weight: 800;
   font-size: 1.1rem;
+  letter-spacing: -0.02em;
 }
 
 .brand-narrow {
   display: inline;
-  color: var(--jt-accent);
-  font-weight: 700;
+  color: var(--jt-text-primary);
+  font-weight: 800;
   font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.brand-accent {
+  color: var(--jt-accent);
 }
 
 .jt-sidebar:hover .brand-full {
@@ -117,4 +123,51 @@
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+}
+
+/* ============================================
+   RESPONSIVE — Mobile sidebar drawer
+   ============================================ */
+@media (max-width: 768px) {
+  .jt-sidebar-brand {
+    display: none;
+  }
+
+  .jt-sidebar {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    height: calc(100vh - 52px);
+    width: 220px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 1030;
+  }
+
+  .jt-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Always show full sidebar when open on mobile */
+  .jt-sidebar.open .brand-full {
+    display: inline;
+  }
+
+  .jt-sidebar.open .brand-narrow {
+    display: none;
+  }
+
+  .jt-sidebar.open .jt-nav-link {
+    padding-left: 20px;
+    justify-content: flex-start;
+  }
+
+  .jt-sidebar.open .jt-nav-label {
+    display: inline;
+  }
+
+  /* Prevent desktop hover expansion on mobile */
+  .jt-sidebar:hover {
+    width: 220px;
+  }
 }
